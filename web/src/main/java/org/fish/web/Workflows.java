@@ -1,8 +1,10 @@
 package org.fish.web;
 
-import org.fish.web.resource.Workflow;
+import org.fish.web.resource.WorkflowResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author Sumit Jha
@@ -11,8 +13,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/workflows")
 public interface Workflows {
     @PostMapping
-    ResponseEntity createWorkflow(@RequestBody Workflow workflow);
+    ResponseEntity<WorkflowResource> createWorkflow(@RequestBody WorkflowResource workflowResource);
 
     @GetMapping
-    ResponseEntity getWorkflows();
+    ResponseEntity<List<WorkflowResource>> getWorkflows();
+
+    @GetMapping("/{id}/instances")
+    ResponseEntity getWorkflowInstances(@PathVariable(name = "id") Long workflowId);
 }

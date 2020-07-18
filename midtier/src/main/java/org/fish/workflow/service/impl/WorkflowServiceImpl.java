@@ -2,12 +2,13 @@ package org.fish.workflow.service.impl;
 
 import org.fish.workflow.data.InstanceDetail;
 import org.fish.workflow.data.WorkflowDetail;
-import org.fish.workflow.data.repository.WorkflowInstanceRepository;
 import org.fish.workflow.data.repository.WorkflowRepository;
 import org.fish.workflow.data.type.EntityStatus;
 import org.fish.workflow.data.type.ExecutionStatus;
+import org.fish.workflow.service.WorkflowInstanceService;
 import org.fish.workflow.service.WorkflowService;
 import org.fish.workflow.service.vo.Workflow;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +24,13 @@ import java.util.stream.Collectors;
 @Service
 public class WorkflowServiceImpl implements WorkflowService {
     private final WorkflowRepository workflowRepository;
-    private final WorkflowInstanceRepository workflowInstanceRepository;
+
+    @Autowired
+    private WorkflowInstanceService workflowInstanceService;
 
     public WorkflowServiceImpl(
-            WorkflowRepository workflowRepository,
-            WorkflowInstanceRepository workflowInstanceRepository) {
+            WorkflowRepository workflowRepository) {
         this.workflowRepository = workflowRepository;
-        this.workflowInstanceRepository = workflowInstanceRepository;
     }
 
     @Override
@@ -43,10 +44,11 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     protected List<Workflow> aggregateWorkflowInstancesFor(List<Workflow> workflows) {
         List<Long> activeWorkflowIds = workflows.stream().map(wfl -> wfl.getId()).collect(Collectors.toList());
-        Map<Long, Map<ExecutionStatus, Long>> aggInstancesStat = workflowInstanceRepository
-                .findAllByStatusAndWorkflowDetail_IdIn(EntityStatus.ACTIVE, activeWorkflowIds)
-                .collect(Collectors.groupingBy(dtl -> Optional.ofNullable(dtl.getWorkflowDetail())
-                                .map(WorkflowDetail::getId).orElse(null),
+        Map<Long, Map<ExecutionStatus, Long>> aggInstancesStat = workflowInstanceService.getInstances(activeWorkflowIds)
+                .stream()
+                .collect(Collectors.groupingBy(dtl ->
+                                Optional.ofNullable(dtl.getWorkflowDetail())
+                                        .map(WorkflowDetail::getId).orElse(null),
                         Collectors.groupingBy(InstanceDetail::getExecutionStatus,
                                 Collectors.counting())));
         workflows.stream()

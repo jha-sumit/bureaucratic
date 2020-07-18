@@ -6,3 +6,6 @@ spring:
     url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/workflow
     username: root
     password: admin
+server:
+  servlet:
+    context-path: /api

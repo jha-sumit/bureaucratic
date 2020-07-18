@@ -1,0 +1,7 @@
+package org.fish.commons.cron;
+
+/**
+ * @author Sumit Jha
+ */
+public class Hour {
+}

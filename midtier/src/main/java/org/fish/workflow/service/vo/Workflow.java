@@ -7,6 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * @author Sumit Jha
@@ -14,12 +16,12 @@ import java.time.LocalDateTime;
 public class Workflow {
     private Long id;
     private String createdBy;
-    private LocalDateTime createdOn;
+    private Calendar createdOn;
     private String updatedBy;
-    private LocalDateTime updatedOn;
+    private Calendar updatedOn;
     private Long activeInstanceCount;
     private Long errorInstancesCount;
-    private LocalDateTime lastRunAt;
+    private Calendar lastRunAt;
     private String name;
     private EntityStatus status;
 
@@ -32,7 +34,8 @@ public class Workflow {
         this.name = workflowDetail.getName();
         this.status = workflowDetail.getStatus();
         this.createdBy = workflowDetail.getCreatedBy();
-//        this.createdOn =
+        this.createdOn = workflowDetail.getCreatedOn();
+        this.createdOn = workflowDetail.getUpdatedOn();
         this.updatedBy = workflowDetail.getUpdatedBy();
     }
 
@@ -52,11 +55,11 @@ public class Workflow {
         this.errorInstancesCount = errorInstancesCount;
     }
 
-    public LocalDateTime getLastRunAt() {
+    public Calendar getLastRunAt() {
         return lastRunAt;
     }
 
-    public void setLastRunAt(LocalDateTime lastRunAt) {
+    public void setLastRunAt(Calendar lastRunAt) {
         this.lastRunAt = lastRunAt;
     }
 
@@ -76,11 +79,11 @@ public class Workflow {
         this.createdBy = createdBy;
     }
 
-    public LocalDateTime getCreatedOn() {
+    public Calendar getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(LocalDateTime createdOn) {
+    public void setCreatedOn(Calendar createdOn) {
         this.createdOn = createdOn;
     }
 
@@ -92,11 +95,11 @@ public class Workflow {
         this.updatedBy = updatedBy;
     }
 
-    public LocalDateTime getUpdatedOn() {
+    public Calendar getUpdatedOn() {
         return updatedOn;
     }
 
-    public void setUpdatedOn(LocalDateTime updatedOn) {
+    public void setUpdatedOn(Calendar updatedOn) {
         this.updatedOn = updatedOn;
     }
 
